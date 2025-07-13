@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:tarea_2_1/widgets/custom_textfield.dart';
+//import 'package:tarea_2_1/widgets/custom_textfield.dart';
 import 'package:tarea_2_1/data/user_data.dart';
-
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -21,15 +20,14 @@ class _RegisterPageState extends State<RegisterPage> {
   void _register() {
     if (_formKey.currentState!.validate()) {
       UserData.registerUser(
-      nameController.text.trim(),
-      emailController.text.trim(),
-      passwordController.text.trim(),
+        nameController.text.trim(),
+        emailController.text.trim(),
+        passwordController.text.trim(),
       );
 
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('¡Registro exitoso!')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('¡Registro exitoso!')));
 
       Navigator.pop(context); // Volver al inicio de sesión
     }
@@ -37,14 +35,15 @@ class _RegisterPageState extends State<RegisterPage> {
 
   String? _validateEmail(String? value) {
     if (value == null || value.isEmpty) return 'Campo obligatorio';
-    if (!value.endsWith('@unah.hn')) return 'Debe usar un correo institucional (@unah.hn)';
+    if (!value.endsWith('@unah.hn') || value == "@unah.hn")
+      return 'Ingresa un correo institucional valido';
     return null;
   }
 
   String? _validatePassword(String? value) {
     if (value == null || value.isEmpty) return 'Campo requerido';
     if (value.length < 6) return 'Debe tener al menos 6 caracteres';
-    if (!RegExp(r'[!@#\$&*~_+-]').hasMatch(value)) {
+    if (!RegExp(r'[!@#$&*~_+-]').hasMatch(value)) {
       return 'Debe incluir al menos un carácter especial';
     }
     return null;
@@ -53,50 +52,95 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Registro')),
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        title: const Text(
+          'Registro',
+          style: TextStyle(
+            fontStyle: FontStyle.italic,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
+        backgroundColor: Colors.blue[900],
+      ),
+
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Form(
           key: _formKey,
           child: Column(
             children: [
-              CustomTextField(
-                label: 'Nombre completo',
-                controller: nameController,
-                validator: (value) =>
-                    value == null || value.isEmpty ? 'Campo requerido' : null,
+              SizedBox(height: 30),
+              TextField(
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  contentPadding: EdgeInsets.all(22),
+                  label: Text("Ingrese su nombre completo"),
+                  labelStyle: TextStyle(color: Colors.black),
+                  hintText: "Ingrese su nombre",
+                  suffixIcon: Icon(Icons.person_2_outlined),
+                ),
               ),
-
-              const SizedBox(height: 20),
-              CustomTextField(
-                label: 'Correo institucional',
-                controller: emailController,
-                keyboardType: TextInputType.emailAddress,
+              const SizedBox(height: 50),
+              TextFormField(
                 validator: _validateEmail,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  contentPadding: EdgeInsets.all(22),
+                  label: Text("Ingresa tu correo constitucional"),
+                  labelStyle: TextStyle(color: Colors.black, fontSize: 15),
+                  hintText: "Ingresa tu correo",
+                  suffixIcon: Icon(Icons.email_outlined),
+                ),
               ),
-
-              const SizedBox(height: 20),
-              CustomTextField(
-                label: 'Contraseña',
+              const SizedBox(height: 50),
+              TextFormField(
                 controller: passwordController,
                 obscureText: obscurePassword,
                 validator: _validatePassword,
-                suffixIcon: IconButton(
-                  icon: Icon(
-                    obscurePassword ? Icons.visibility : Icons.visibility_off,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20),
                   ),
-                  onPressed: () {
-                    setState(() {
-                      obscurePassword = !obscurePassword;
-                    });
-                  },
+                  contentPadding: EdgeInsets.all(22),
+                  label: Text("Ingresa una contraseña"),
+                  labelStyle: TextStyle(color: Colors.black, fontSize: 15),
+                  hintText: "Ingresa tu contraseña",
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      obscurePassword ? Icons.visibility : Icons.visibility_off,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        obscurePassword = !obscurePassword;
+                      });
+                    },
+                  ),
                 ),
               ),
-              
-              const SizedBox(height: 30),
+
+              const SizedBox(height: 60),
               ElevatedButton(
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.amber),
                 onPressed: _register,
-                child: const Text('Registrar'),
+                child: const Text(
+                  'Registrar',
+                  style: TextStyle(color: Colors.black),
+                ),
+              ),
+              SizedBox(height: 100),
+              Text(
+                "Lenguajes de Programacion",
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.normal,
+                  fontStyle: FontStyle.italic,
+                ),
               ),
             ],
           ),
