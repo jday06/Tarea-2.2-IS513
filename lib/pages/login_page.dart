@@ -19,8 +19,9 @@ class _LoginPageState extends State<LoginPage> {
 
   String? _validateEmail(String? value) {
     if (value == null || value.isEmpty) return 'Campo obligatorio';
-    if (!value.endsWith('@unah.hn')) return 'Debe usar su correo institucional (@unah.hn)';
-    return null;
+    if (!value.endsWith('@unah.hn')) {
+      return 'Debe usar su correo institucional (@unah.hn)';
+    }
   }
 
   String? _validatePassword(String? value) {
@@ -28,65 +29,114 @@ class _LoginPageState extends State<LoginPage> {
     return null;
   }
 
-  void _login() {
-    if (_formKey.currentState!.validate()) {
-      final email = emailController.text.trim();
-      final password = passwordController.text.trim();
+  void _login(BuildContext context) {
+    final String email = emailController.text.trim();
+    final String password = passwordController.text.trim();
 
-      final success = UserData.loginUser(email, password);
+    bool isValidEmail = email.endsWith('@unah.hn');
+    bool isValidPassword =
+        password.length >= 6 && RegExp(r'[!@#\$&*~]').hasMatch(password);
 
-      if (success) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (_) => HomePage(userName: UserData.registeredName ?? ''),
-          ),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Correo o contraseña incorrectos')),
-        );
-      }
+    if (!isValidEmail || !isValidPassword) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Correo o contraseña incorrectos'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
     }
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('¡Inicio de sesión exitoso!'),
+        backgroundColor: Colors.green,
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Iniciar Sesión')),
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        title: const Text(
+          'Iniciar Sesión',
+          style: TextStyle(
+            fontStyle: FontStyle.italic,
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        backgroundColor: Colors.blue[900],
+      ),
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Form(
           key: _formKey,
           child: Column(
             children: [
-              CustomTextField(
-                label: 'Correo institucional',
-                controller: emailController,
+              SizedBox(height: 30),
+              TextFormField(
                 keyboardType: TextInputType.emailAddress,
                 validator: _validateEmail,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  contentPadding: EdgeInsets.all(22),
+                  label: Text("Correo Institucional"),
+                  labelStyle: TextStyle(color: Colors.black, fontSize: 18),
+                  hintText: "Ingresa un correo",
+                  suffixIcon: Icon(Icons.email_outlined),
+                ),
               ),
-              const SizedBox(height: 20),
-              CustomTextField(
-                label: 'Contraseña',
+
+              const SizedBox(height: 50),
+              TextFormField(
                 controller: passwordController,
                 obscureText: obscurePassword,
                 validator: _validatePassword,
-                suffixIcon: IconButton(
-                  icon: Icon(
-                    obscurePassword ? Icons.visibility : Icons.visibility_off,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20),
                   ),
-                  onPressed: () {
-                    setState(() {
-                      obscurePassword = !obscurePassword;
-                    });
-                  },
+                  contentPadding: EdgeInsets.all(22),
+                  label: Text("Ingresa una contraseña"),
+                  labelStyle: TextStyle(color: Colors.black, fontSize: 18),
+                  hintText: "Ingresa tu contraseña",
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      obscurePassword ? Icons.visibility : Icons.visibility_off,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        obscurePassword = !obscurePassword;
+                      });
+                    },
+                  ),
                 ),
               ),
-              const SizedBox(height: 30),
+
+              const SizedBox(height: 50),
               ElevatedButton(
-                onPressed: _login,
-                child: const Text('Iniciar sesión'),
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.amber),
+                onPressed: () {
+                  _login(context);
+                },
+                child: const Text(
+                  'Iniciar sesión',
+                  style: TextStyle(color: Colors.black),
+                ),
+              ),
+              SizedBox(height: 200),
+              Text(
+                "Lenguajes de Programacion",
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.normal,
+                  fontStyle: FontStyle.italic,
+                ),
               ),
             ],
           ),
