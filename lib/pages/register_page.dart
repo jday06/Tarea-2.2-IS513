@@ -73,6 +73,7 @@ class _RegisterPageState extends State<RegisterPage> {
             children: [
               SizedBox(height: 30),
               TextField(
+                controller: nameController,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(20),

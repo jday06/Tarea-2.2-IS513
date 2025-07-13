@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tarea_2_1/widgets/custom_textfield.dart';
+//import 'package:tarea_2_1/widgets/custom_textfield.dart';
 import 'package:tarea_2_1/data/user_data.dart';
 import 'home_page.dart';
 
@@ -19,8 +19,8 @@ class _LoginPageState extends State<LoginPage> {
 
   String? _validateEmail(String? value) {
     if (value == null || value.isEmpty) return 'Campo obligatorio';
-    if (!value.endsWith('@unah.hn')) {
-      return 'Debe usar su correo institucional (@unah.hn)';
+    if (!value.endsWith('@unah.hn') || value == '@unah.hn') {
+      return 'Ingrese un correo institucional valido';
     }
   }
 
@@ -53,6 +53,13 @@ class _LoginPageState extends State<LoginPage> {
         backgroundColor: Colors.green,
       ),
     );
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) =>
+            HomePage(userName: UserData.registeredName ?? "Usuario"),
+      ),
+    );
   }
 
   @override
@@ -80,6 +87,7 @@ class _LoginPageState extends State<LoginPage> {
               TextFormField(
                 keyboardType: TextInputType.emailAddress,
                 validator: _validateEmail,
+                controller: emailController,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(20),
@@ -122,7 +130,9 @@ class _LoginPageState extends State<LoginPage> {
               ElevatedButton(
                 style: ElevatedButton.styleFrom(backgroundColor: Colors.amber),
                 onPressed: () {
-                  _login(context);
+                  if (_formKey.currentState!.validate()) {
+                    _login(context);
+                  }
                 },
                 child: const Text(
                   'Iniciar sesión',

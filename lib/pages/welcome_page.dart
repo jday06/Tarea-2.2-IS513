@@ -8,6 +8,7 @@ class WelcomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.amber,
       body: SafeArea(
         child: Container(
           width: double.infinity,
@@ -17,33 +18,64 @@ class WelcomePage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               const Text(
-                'Bienvenido a mi app',
+                'Bienvenido a nuestra app!',
                 style: TextStyle(
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold,
+                  fontSize: 25,
+                  fontStyle: FontStyle.normal,
+                  fontWeight: FontWeight.w900,
+                  color: Colors.white,
+                  backgroundColor: Colors.blue,
                 ),
               ),
               Column(
                 children: [
+                  Image.network(
+                    "https://img.icons8.com/fluent/512/microsoft-people.png",
+                    width: 250,
+                    height: 250,
+                  ),
+
+                  Text(
+                    "Inicia sesion o registrate si no tienes una cuenta!",
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.normal,
+                      color: Colors.black,
+                    ),
+                  ),
+
+                  SizedBox(height: 100),
                   ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue,
+                    ),
                     onPressed: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (_) => const RegisterPage()),
                       );
                     },
-                    child: const Text('Registrarse'),
+                    child: const Text(
+                      'Registrarse',
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
 
                   const SizedBox(height: 20),
                   ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue,
+                    ),
                     onPressed: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (_) => const LoginPage()),
                       );
                     },
-                    child: const Text('Iniciar sesión'),
+                    child: const Text(
+                      'Iniciar sesión',
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                 ],
               ),
@@ -52,5 +84,11 @@ class WelcomePage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  @override
+  State<StatefulWidget> createState() {
+    // TODO: implement createState
+    throw UnimplementedError();
   }
 }
